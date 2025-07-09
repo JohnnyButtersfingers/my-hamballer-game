@@ -1,0 +1,1 @@
+{ "name": "hamballer-xyz", "private": true, "workspaces": ["contracts", "backend", "frontend"] }
