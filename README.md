@@ -56,3 +56,12 @@ This whitepaper is not financial advice or a token offering document.
 Gameplay, mechanics, and token design are experimental and may evolve.
 All in-game assets are subject to regulatory compliance and platform terms.
 HamBaller.xyz operates transparently but assumes no responsibility for player risks.
+
+---
+
+## 📣 Development Status Update
+
+✅ **Beta MVP PR merged. All tests passed, including Phase 10.2A UI polish.**  
+Ready for QA and mainnet readiness steps.  
+Scope confirmed via `/docs/MVP_CHECKLIST.md`.  
+Tracks with dev reports v2.2, whitepaper v3.1, and Year 1 supply simulation (~169k DBP @ capped DAU).
