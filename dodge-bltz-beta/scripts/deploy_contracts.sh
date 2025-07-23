@@ -1,6 +1,20 @@
 #!/bin/bash
 
 # Deploy script for Dodge BLTZ smart contracts
+#
+# REQUIREMENTS:
+# - Linux environment (Ubuntu 20.04+ recommended)
+# - EOSIO CDT (WAX edition) installed
+# - cleos command available in PATH
+# - WAX testnet accounts: dbptoken.acc, gameplay.acc
+# - Testnet accounts funded with WAX tokens
+#
+# PREREQUISITES:
+# 1. Run build_contracts.sh first to compile contracts
+# 2. Create testnet accounts at https://waxsweden.org/testnet/
+# 3. Fund accounts with testnet WAX tokens
+#
+# NOTE: This script will not work on macOS due to platform compatibility issues.
 
 echo "Deploying Dodge BLTZ Smart Contracts to WAX Testnet..."
 

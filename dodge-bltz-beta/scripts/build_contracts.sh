@@ -1,6 +1,17 @@
 #!/bin/bash
 
 # Build script for Dodge BLTZ smart contracts
+# 
+# REQUIREMENTS:
+# - Linux environment (Ubuntu 20.04+ recommended)
+# - EOSIO CDT (WAX edition) installed
+# - eosio-cpp command available in PATH
+# 
+# INSTALLATION:
+# wget https://github.com/worldwide-asset-exchange/wax-cdt/releases/download/v1.7.0-wax02/cdt_1.7.0-wax02_amd64.deb
+# sudo apt install ./cdt_1.7.0-wax02_amd64.deb
+#
+# NOTE: This script will not work on macOS due to platform compatibility issues.
 
 echo "Building Dodge BLTZ Smart Contracts..."
 

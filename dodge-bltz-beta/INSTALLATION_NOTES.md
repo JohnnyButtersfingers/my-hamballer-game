@@ -84,6 +84,35 @@ docker run -it --rm -v $(pwd):/workspace ubuntu:20.04
 3. **WAX Testnet Accounts**: `dbptoken.acc` and `gameplay.acc`
 4. **Unity 2022 LTS**: For client testing
 
+### **QA Team Setup Instructions**
+
+#### **1. Linux Environment Setup**
+```bash
+# Ubuntu 20.04+ recommended
+sudo apt update && sudo apt upgrade -y
+```
+
+#### **2. WAX CDT Installation**
+```bash
+# Download and install WAX CDT
+wget https://github.com/worldwide-asset-exchange/wax-cdt/releases/download/v1.7.0-wax02/cdt_1.7.0-wax02_amd64.deb
+sudo apt install ./cdt_1.7.0-wax02_amd64.deb
+
+# Verify installation
+eosio-cpp --version
+```
+
+#### **3. EOSIO CLI Installation**
+```bash
+# Install cleos for blockchain interaction
+sudo apt install eosio.cdt
+```
+
+#### **4. Testnet Account Setup**
+- Create accounts at: https://waxsweden.org/testnet/
+- Required accounts: `dbptoken.acc`, `gameplay.acc`
+- Fund accounts with testnet WAX tokens
+
 ### **Recommended Setup Process**
 ```bash
 # On Linux system

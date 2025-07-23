@@ -39,6 +39,9 @@ dodge-bltz-beta/
 │       ├── GameplayManager.cs    # Game logic and transactions
 │       └── GameConfig.cs         # Configuration management
 ├── QUICKSTART.md      # Quick setup guide
+├── DOCUMENTATION_STATUS.md # Verification report
+├── TEST_REPORT.md     # Testing results and validation
+├── INSTALLATION_NOTES.md # EOSIO CDT setup guide
 └── README.md          # This file
 ```
 
@@ -100,9 +103,19 @@ dodge-bltz-beta/
 
 ## Documentation
 
+### **Core Documentation**
 - [Quick Start Guide](QUICKSTART.md) - Fast setup for developers
 - [Deployment Guide](docs/DEPLOYMENT.md) - Step-by-step deployment instructions
 - [Developer Handoff Report](docs/DEVELOPER_HANDOFF.md) - Comprehensive project documentation
+
+### **Verification & Testing**
+- [Documentation Status](DOCUMENTATION_STATUS.md) - Complete verification report
+- [Test Report](TEST_REPORT.md) - Testing results and validation
+- [Installation Notes](INSTALLATION_NOTES.md) - EOSIO CDT setup guide
+
+### **QA & Deployment**
+- [Final PR Summary](../FINAL_PR_SUMMARY.md) - Complete PR overview
+- [Installation Requirements](INSTALLATION_NOTES.md#deployment-readiness) - Linux environment setup
 
 ## Testing
 
