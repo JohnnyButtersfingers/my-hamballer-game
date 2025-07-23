@@ -89,32 +89,9 @@ namespace DodgeBltz
             return (uint64_t)(timestamp + random);
         }
         
-        private object CreatePlayTransaction(string playerAccount, uint64_t nonce)
+        private GameplayTransaction CreatePlayTransaction(string playerAccount, uint64_t nonce)
         {
-            return new
-            {
-                actions = new[]
-                {
-                    new
-                    {
-                        account = gameplayContract,
-                        name = "play",
-                        authorization = new[]
-                        {
-                            new
-                            {
-                                actor = playerAccount,
-                                permission = "active"
-                            }
-                        },
-                        data = new
-                        {
-                            player = playerAccount,
-                            nonce = nonce
-                        }
-                    }
-                }
-            };
+            return new GameplayTransaction(playerAccount, nonce);
         }
         
         private void OnTransactionSigned(string transactionHash)

@@ -92,5 +92,22 @@ Set in the Abstract Arena after the Minting Wars, players embody HamBallersplush
 - **Phase 2**: Vaults, ladders, DAO funding, Roblox/WAX expansions
 - **Future**: Cross-chain plans, mobile PWA, and community meme integrations
 
+## QA + SDK Integration
+- Ensure Unity WebGL build is hosted with SSL
+- Test with real WAX testnet wallet  
+- Wallet must support scatter-compatible signing
+
+### **WAX Integration Requirements**
+- **Unity WebGL**: SSL hosting required for WAX Cloud Wallet integration
+- **Testing Environment**: WAX testnet with gameplayacc2 contract deployment
+- **Browser Compatibility**: Chrome, Firefox, Safari (desktop + mobile)
+- **Wallet Integration**: Real WAX accounts with scatter-compatible transaction signing
+
+### **Quality Assurance**
+- **Test Plan**: `dodge-bltz/tests/QARegressionChecklist.md`
+- **Cross-Platform Testing**: Desktop and mobile browser validation
+- **Performance Requirements**: <30s load time, smooth mobile experience
+- **Security**: Nonce-based replay protection, secure RPC endpoints
+
 ### **Disclaimers**
 This whitepaper is not financial advice or a token offering document. Gameplay, mechanics, and token design are experimental and may evolve. All in-game assets are subject to regulatory compliance and platform terms. HamBaller.xyz operates transparently but assumes no responsibility for player risks.

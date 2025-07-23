@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Dodge BLTZ Beta - WAX Edition</title>
+    
+    <!-- WAX SDK Integration -->
+    <script type="module">
+        // Preload waxjs for better performance
+        import('https://unpkg.com/@waxio/waxjs@latest/dist/waxjs.js').then(() => {
+            console.log('WAX SDK preloaded');
+        }).catch(err => {
+            console.error('Failed to preload WAX SDK:', err);
+        });
+    </script>
+    
+    <style>
+        html, body {
+            background: #1a1a2e;
+            background: linear-gradient(45deg, #1a1a2e, #16213e);
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+        
+        #unity-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        #unity-canvas {
+            background: #000;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        #unity-loading-bar {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+        
+        #unity-logo {
+            width: 154px;
+            height: 130px;
+            background: url('logo.png') no-repeat center / contain;
+        }
+        
+        #unity-progress-bar-empty {
+            width: 141px;
+            height: 18px;
+            margin-top: 10px;
+            margin-left: 6.5px;
+            background: url('progress-bar-empty-dark.png') no-repeat center / contain;
+        }
+        
+        #unity-progress-bar-full {
+            width: 0%;
+            height: 18px;
+            margin-top: 10px;
+            background: url('progress-bar-full-dark.png') no-repeat center / contain;
+        }
+        
+        #unity-footer {
+            position: relative;
+            height: 38px;
+            margin-top: 10px;
+        }
+        
+        #unity-webgl-logo {
+            float: left;
+            width: 204px;
+            height: 38px;
+            background: url('webgl-logo.png') no-repeat center / contain;
+        }
+        
+        #unity-build-title {
+            float: right;
+            margin-right: 10px;
+            line-height: 38px;
+            font-family: arial;
+            font-size: 18px;
+            color: #fff;
+        }
+        
+        #unity-fullscreen-button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 38px;
+            height: 38px;
+            background: url('fullscreen-button.png') no-repeat center / contain;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        
+        #unity-warning {
+            position: absolute;
+            left: 50%;
+            top: 5%;
+            transform: translate(-50%, 0);
+            background: rgba(255, 255, 255, 0.9);
+            color: #000;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 400px;
+            text-align: center;
+            display: none;
+            z-index: 1001;
+        }
+        
+        .wax-status {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .wax-status.connected {
+            background: rgba(0, 150, 0, 0.7);
+        }
+        
+        .wax-status.error {
+            background: rgba(150, 0, 0, 0.7);
+        }
+        
+        @media (max-width: 768px) {
+            #unity-fullscreen-button {
+                right: 5px;
+                top: 5px;
+                width: 32px;
+                height: 32px;
+            }
+            
+            .wax-status {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+        
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+            <div id="unity-footer">
+                <div id="unity-webgl-logo"></div>
+                <div id="unity-build-title">Dodge BLTZ Beta</div>
+            </div>
+        </div>
+        
+        <div id="unity-warning">
+            <div class="title">This content requires WebGL and WAX Wallet support</div>
+            <div class="body">
+                Please ensure:
+                <ul>
+                    <li>Your browser supports WebGL</li>
+                    <li>Site is accessed via HTTPS</li>
+                    <li>Popups are enabled for WAX Wallet</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div id="unity-fullscreen-button"></div>
+        
+        <div id="wax-status" class="wax-status">
+            WAX: Initializing...
+        </div>
+    </div>
+
+    <script>
+        // WAX Status Management
+        function updateWaxStatus(status, isConnected = false, isError = false) {
+            const statusElement = document.getElementById('wax-status');
+            statusElement.textContent = 'WAX: ' + status;
+            statusElement.className = 'wax-status' + 
+                (isConnected ? ' connected' : '') + 
+                (isError ? ' error' : '');
+        }
+
+        // Unity WebGL Configuration
+        var container = document.querySelector("#unity-container");
+        var canvas = document.querySelector("#unity-canvas");
+        var loadingBar = document.querySelector("#unity-loading-bar");
+        var progressBarFull = document.querySelector("#unity-progress-bar-full");
+        var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+        var warningBanner = document.querySelector("#unity-warning");
+
+        // Show loading bar
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            // Mobile device style: fill the whole browser client area with the game canvas
+            var meta = document.createElement('meta');
+            meta.name = 'viewport';
+            meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+            document.getElementsByTagName('head')[0].appendChild(meta);
+            container.className = "unity-mobile";
+            canvas.className = "unity-mobile";
+        } else {
+            canvas.style.width = "100%";
+            canvas.style.height = "100%";
+        }
+
+        loadingBar.style.display = "block";
+
+        var buildUrl = "Build";
+        var loaderUrl = buildUrl + "/{{{ LOADER_FILENAME }}}";
+        var config = {
+            dataUrl: buildUrl + "/{{{ DATA_FILENAME }}}",
+            frameworkUrl: buildUrl + "/{{{ FRAMEWORK_FILENAME }}}",
+            codeUrl: buildUrl + "/{{{ CODE_FILENAME }}}",
+#if MEMORY_FILENAME
+            memoryUrl: buildUrl + "/{{{ MEMORY_FILENAME }}}",
+#endif
+#if SYMBOLS_FILENAME
+            symbolsUrl: buildUrl + "/{{{ SYMBOLS_FILENAME }}}",
+#endif
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "HamBaller",
+            productName: "Dodge BLTZ Beta",
+            productVersion: "0.9.0",
+            showBanner: unityShowBanner,
+        };
+
+        // Check for WebGL and HTTPS support
+        if (!window.WebAssembly) {
+            unityShowBanner('Your browser does not support WebAssembly. Please update to a newer browser.', 'error');
+        } else if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+            unityShowBanner('WAX Wallet integration requires HTTPS. Please access this site securely.', 'warning');
+            updateWaxStatus('HTTPS Required', false, true);
+        } else {
+            updateWaxStatus('Ready');
+        }
+
+        // Banner management
+        function unityShowBanner(msg, type) {
+            function updateBannerVisibility() {
+                warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+            }
+            var div = document.createElement('div');
+            div.innerHTML = msg;
+            warningBanner.appendChild(div);
+            if (type == 'error') div.style = 'background: red; padding: 10px;';
+            else {
+                if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+                setTimeout(function() {
+                    warningBanner.removeChild(div);
+                    updateBannerVisibility();
+                }, 5000);
+            }
+            updateBannerVisibility();
+        }
+
+        // Unity instance management
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            createUnityInstance(canvas, config, (progress) => {
+                progressBarFull.style.width = 100 * progress + "%";
+            }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                
+                // Store Unity instance for WAX integration
+                window.unityInstance = unityInstance;
+                
+                // Fullscreen support
+                fullscreenButton.onclick = () => {
+                    unityInstance.SetFullscreen(1);
+                };
+                
+                updateWaxStatus('Unity Loaded');
+                
+            }).catch((message) => {
+                alert(message);
+                updateWaxStatus('Load Failed', false, true);
+            });
+        };
+        
+        script.onerror = () => {
+            unityShowBanner('Failed to load Unity WebGL build.', 'error');
+            updateWaxStatus('Build Error', false, true);
+        };
+        
+        document.body.appendChild(script);
+
+        // WAX SDK Event Listeners
+        window.addEventListener('wax-connected', (event) => {
+            updateWaxStatus('Connected: ' + event.detail.account, true);
+        });
+
+        window.addEventListener('wax-disconnected', () => {
+            updateWaxStatus('Disconnected');
+        });
+
+        window.addEventListener('wax-error', (event) => {
+            updateWaxStatus('Error: ' + event.detail.message, false, true);
+        });
+
+        // Popup blocker detection
+        function checkPopupBlocked() {
+            var popup = window.open('', '_blank', 'width=1,height=1');
+            if (!popup || popup.closed || typeof popup.closed == 'undefined') {
+                unityShowBanner('Popup blocker detected. Please allow popups for WAX Wallet.', 'warning');
+                updateWaxStatus('Popups Blocked', false, true);
+                return false;
+            } else {
+                popup.close();
+                return true;
+            }
+        }
+
+        // Initialize popup check after page load
+        window.addEventListener('load', () => {
+            setTimeout(checkPopupBlocked, 1000);
+        });
+    </script>
+</body>
+</html>
