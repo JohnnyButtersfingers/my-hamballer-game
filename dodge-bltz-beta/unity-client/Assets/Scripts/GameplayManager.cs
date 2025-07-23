@@ -272,14 +272,18 @@ namespace DodgeBLTZ
         {
             if (resultText)
             {
-                resultText.text = won ? "You dodged successfully!" : "You got hit!";
-                resultText.color = won ? Color.green : Color.red;
+                // TODO: Update messaging based on final brand approval (Issue #003)
+                // Current options: "You dodged successfully!" vs "BLTZ SUCCESSFUL!"
+                resultText.text = won ? "BLTZ SUCCESSFUL!" : "BLTZ FAILED";
+                // Use centralized color palette for consistency (Issue #001)
+                resultText.color = won ? UIColorPalette.Success : UIColorPalette.Error;
             }
 
             if (tokenRewardText)
             {
-                tokenRewardText.text = won ? $"+{tokensWon} DBP" : "No reward";
-                tokenRewardText.gameObject.SetActive(won);
+                tokenRewardText.text = won ? $"You earned {tokensWon}.0000 DBP!" : "Better luck next time!";
+                tokenRewardText.gameObject.SetActive(true); // Show encouragement even on loss
+                tokenRewardText.color = won ? UIColorPalette.Success : UIColorPalette.TextSecondary;
             }
         }
 
