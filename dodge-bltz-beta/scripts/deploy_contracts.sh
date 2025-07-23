@@ -4,7 +4,7 @@
 #
 # REQUIREMENTS:
 # - Linux environment (Ubuntu 20.04+ recommended)
-# - EOSIO CDT (WAX edition) installed
+# - Antelope CDT v4.1.0+ installed (latest as of July 2025)
 # - cleos command available in PATH
 # - WAX testnet accounts: dbptoken.acc, gameplay.acc
 # - Testnet accounts funded with WAX tokens

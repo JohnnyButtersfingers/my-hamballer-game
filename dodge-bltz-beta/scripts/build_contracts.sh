@@ -4,14 +4,15 @@
 # 
 # REQUIREMENTS:
 # - Linux environment (Ubuntu 20.04+ recommended)
-# - EOSIO CDT (WAX edition) installed
+# - Antelope CDT v4.1.0+ installed (latest as of July 2025)
 # - eosio-cpp command available in PATH
 # 
 # INSTALLATION:
-# wget https://github.com/worldwide-asset-exchange/wax-cdt/releases/download/v1.7.0-wax02/cdt_1.7.0-wax02_amd64.deb
-# sudo apt install ./cdt_1.7.0-wax02_amd64.deb
+# git clone https://github.com/AntelopeIO/cdt
+# cd cdt && cmake . && make install
 #
 # NOTE: This script will not work on macOS due to platform compatibility issues.
+# NOTE: v1.7.0-wax02 and 1.6.1-1 are outdated legacy versions.
 
 echo "Building Dodge BLTZ Smart Contracts..."
 

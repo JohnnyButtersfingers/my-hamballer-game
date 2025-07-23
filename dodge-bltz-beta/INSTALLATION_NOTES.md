@@ -92,14 +92,20 @@ docker run -it --rm -v $(pwd):/workspace ubuntu:20.04
 sudo apt update && sudo apt upgrade -y
 ```
 
-#### **2. WAX CDT Installation**
+#### **2. Antelope CDT Installation (Latest v4.1.0)**
 ```bash
-# Download and install WAX CDT
-wget https://github.com/worldwide-asset-exchange/wax-cdt/releases/download/v1.7.0-wax02/cdt_1.7.0-wax02_amd64.deb
-sudo apt install ./cdt_1.7.0-wax02_amd64.deb
+# Install Antelope CDT v4.1.0 (latest as of July 2025)
+# Option 1: Build from source (recommended)
+git clone https://github.com/AntelopeIO/cdt
+cd cdt
+cmake . && make install
+
+# Option 2: Use pre-built packages (if available)
+# Check developers.wax.io for latest packages
 
 # Verify installation
 eosio-cpp --version
+# Should show Antelope CDT v4.1.0 or later
 ```
 
 #### **3. EOSIO CLI Installation**
@@ -115,9 +121,11 @@ sudo apt install eosio.cdt
 
 ### **Recommended Setup Process**
 ```bash
-# On Linux system
-wget https://github.com/worldwide-asset-exchange/wax-cdt/releases/download/v1.7.0-wax02/cdt_1.7.0-wax02_amd64.deb
-sudo apt install ./cdt_1.7.0-wax02_amd64.deb
+# On Linux system (Ubuntu 20.04+)
+# Install Antelope CDT v4.1.0
+git clone https://github.com/AntelopeIO/cdt
+cd cdt
+cmake . && make install
 
 # Verify installation
 eosio-cpp --version
