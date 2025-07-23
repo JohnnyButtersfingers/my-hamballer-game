@@ -4,7 +4,7 @@ namespace DodgeBLTZ
     {
         // Contract Accounts
         public const string TOKEN_CONTRACT = "dbptoken.acc";
-        public const string GAMEPLAY_CONTRACT = "gameplay.acc";
+        public const string GAMEPLAY_CONTRACT = "gameplayacc2";
         
         // WAX Network Configuration
         public const string WAX_TESTNET_ENDPOINT = "https://testnet.wax.pink.gg";

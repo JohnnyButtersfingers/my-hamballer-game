@@ -65,9 +65,9 @@ namespace DodgeBLTZ
                 return;
             }
 
-            // In a real implementation, this would open the WAX Cloud Wallet
-            // For now, we'll simulate the login process
-            StartCoroutine(SimulateLogin());
+            // TODO: Replace with actual WAX Cloud Wallet SDK integration
+            // For WebGL builds, this should open wallet popup window
+            StartCoroutine(InitiateWAXLogin());
         }
 
         /// <summary>
@@ -105,28 +105,52 @@ namespace DodgeBLTZ
         }
 
         /// <summary>
-        /// Signs a transaction with the user's account
+        /// Signs a transaction with the user's account via WAX Cloud Wallet
         /// </summary>
         public IEnumerator SignTransaction(TransactionData transaction, Action<string> onSuccess, Action<string> onError)
         {
             if (!isLoggedIn)
             {
-                onError?.Invoke("Not logged in");
+                onError?.Invoke("Wallet not connected");
                 yield break;
             }
 
-            // Simulate transaction signing
-            yield return new WaitForSeconds(1f);
-
-            // In a real implementation, this would interact with WAX Cloud Wallet
-            string signedTransaction = JsonConvert.SerializeObject(new
+            try
             {
-                transaction = transaction,
-                signature = "simulated_signature_" + UnityEngine.Random.Range(1000, 9999),
-                account = currentAccount
-            });
+                Debug.Log($"Signing transaction for account: {currentAccount}");
+                
+                // TODO: Replace with actual WAX Cloud Wallet transaction signing
+                // This should open wallet popup for user to approve the transaction
+                
+                #if UNITY_WEBGL && !UNITY_EDITOR
+                // WebGL-specific transaction signing
+                var transactionJson = JsonConvert.SerializeObject(transaction);
+                Application.ExternalEval($@"
+                    console.log('Requesting transaction signature for:', {transactionJson});
+                    // TODO: Integrate with WAX Cloud Wallet SDK
+                ");
+                #endif
+                
+                // Simulate signing delay
+                yield return new WaitForSeconds(1.5f);
+                
+                // TODO: Replace with actual signed transaction from wallet
+                var signedTx = new WAXSignedTransaction
+                {
+                    packed_trx = "simulated_packed_transaction_" + UnityEngine.Random.Range(1000, 9999),
+                    signatures = new string[] { $"SIG_K1_simulated_signature_{UnityEngine.Random.Range(1000, 9999)}" },
+                    packed_context_free_data = "",
+                    compression = "none"
+                };
 
-            onSuccess?.Invoke(signedTransaction);
+                string signedTransactionJson = JsonConvert.SerializeObject(signedTx);
+                onSuccess?.Invoke(signedTransactionJson);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Transaction signing failed: {e.Message}");
+                onError?.Invoke($"Signing failed: {e.Message}");
+            }
         }
 
         /// <summary>
@@ -162,21 +186,50 @@ namespace DodgeBLTZ
         }
 
         /// <summary>
-        /// Simulates the login process (replace with actual WAX Cloud Wallet integration)
+        /// Initiates WAX Cloud Wallet login process
+        /// TODO: Integrate with actual WAX Cloud Wallet SDK for WebGL
         /// </summary>
-        private IEnumerator SimulateLogin()
+        private IEnumerator InitiateWAXLogin()
         {
             Debug.Log("Initiating WAX Cloud Wallet login...");
             
-            // Simulate network delay
-            yield return new WaitForSeconds(2f);
-
-            // Simulate successful login
-            currentAccount = "testuser" + UnityEngine.Random.Range(1000, 9999);
+            try 
+            {
+                // TODO: Replace with actual WAX Cloud Wallet integration
+                // For WebGL builds, this should use JavaScript interop to open wallet popup
+                
+                #if UNITY_WEBGL && !UNITY_EDITOR
+                // WebGL-specific wallet integration
+                Application.ExternalEval($@"
+                    window.open('{WAX_CLOUD_WALLET_URL}/login', 'wax_login', 
+                    'width=400,height=600,scrollbars=yes,resizable=yes');
+                ");
+                #endif
+                
+                // Temporary simulation for development - REMOVE for production
+                yield return new WaitForSeconds(2f);
+                
+                // TODO: Replace with actual wallet response handling
+                string simulatedAccount = "testuser" + UnityEngine.Random.Range(1000, 9999);
+                HandleLoginSuccess(simulatedAccount);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"WAX login failed: {e.Message}");
+                OnLoginError?.Invoke(e.Message);
+            }
+        }
+        
+        /// <summary>
+        /// Handles successful wallet login
+        /// </summary>
+        private void HandleLoginSuccess(string accountName)
+        {
+            currentAccount = accountName;
             isLoggedIn = true;
-
+            
             OnAccountLoggedIn?.Invoke(currentAccount);
-            Debug.Log($"Logged in as: {currentAccount}");
+            Debug.Log($"WAX Wallet connected: {currentAccount}");
         }
     }
 
@@ -190,6 +243,18 @@ namespace DodgeBLTZ
         public string name;
         public object data;
         public string[] authorization;
+    }
+
+    /// <summary>
+    /// WAX signed transaction structure
+    /// </summary>
+    [Serializable]
+    public class WAXSignedTransaction
+    {
+        public string packed_trx;
+        public string[] signatures;
+        public string packed_context_free_data;
+        public string compression;
     }
 
     /// <summary>

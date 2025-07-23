@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+  <!-- RNG Dice Icon -->
+  <rect x="8" y="8" width="48" height="48" rx="6" fill="#16213E" stroke="#FF6B35" stroke-width="2"/>
+  
+  <!-- Dice dots for random number generation -->
+  <circle cx="20" cy="20" r="3" fill="#FFFFFF"/>
+  <circle cx="32" cy="20" r="3" fill="#FFFFFF"/>
+  <circle cx="44" cy="20" r="3" fill="#FFFFFF"/>
+  
+  <circle cx="20" cy="32" r="3" fill="#FFFFFF"/>
+  <circle cx="44" cy="32" r="3" fill="#FFFFFF"/>
+  
+  <circle cx="20" cy="44" r="3" fill="#FFFFFF"/>
+  <circle cx="32" cy="44" r="3" fill="#FFFFFF"/>
+  <circle cx="44" cy="44" r="3" fill="#FFFFFF"/>
+  
+  <!-- RNG indicator -->
+  <text x="32" y="55" text-anchor="middle" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#BDC3C7">RNG</text>
+</svg>
