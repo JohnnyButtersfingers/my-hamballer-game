@@ -1,4 +1,4 @@
-# Dodge BLTZ Beta - Unified Integration
+# DODGE BLTZ BETA
 
 **A provably-fair, RNG-based dodgeball mini-game on the WAX blockchain**
 
@@ -6,7 +6,7 @@
 
 ## Overview
 
-Dodge BLTZ is a blockchain-based game where players attempt to dodge incoming balls with a 35% success chance. Each successful play mints one $DBP token. The game uses WAX Cloud Wallet for authentication and the official WAX RNG Oracle to guarantee fairness.
+DODGE BLTZ BETA is a blockchain-based game where players attempt to dodge incoming balls with a 35% success chance. Each successful play mints one $DBP token. The game uses WAX Cloud Wallet for authentication and the official WAX RNG Oracle to guarantee fairness.
 
 This Beta MVP focuses on a single "BLTZ" action with three-screen UI (Start, Resolving, Result). Features like FlexBLTZ, CP currency, NFTs, leaderboards, and governance are planned for future phases.
 

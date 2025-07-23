@@ -21,9 +21,9 @@ namespace DodgeBLTZ
         public static event Action<GameState> OnGameStateChanged;
         public static event Action<bool, int> OnGameResult; // won, DBP earned
 
-        // Contract configuration
-        private const string GAMEPLAY_CONTRACT = "gameplay.acc";
-        private const string TOKEN_CONTRACT = "dbptoken.acc";
+        // Contract configuration - using GameConfig for consistency
+        private const string GAMEPLAY_CONTRACT = GameConfig.GAMEPLAY_CONTRACT;
+        private const string TOKEN_CONTRACT = GameConfig.TOKEN_CONTRACT;
 
         // UI References (to be assigned in Unity Inspector)
         [Header("UI Elements")]
@@ -36,6 +36,8 @@ namespace DodgeBLTZ
         [SerializeField] private Text accountText;
         [SerializeField] private Text resultText;
         [SerializeField] private Text tokenRewardText;
+        [SerializeField] private Text statusText; // For showing connection/loading status
+        [SerializeField] private Text gameInfoText; // For showing game rules/info
 
         // Game state
         private GameState currentState;
@@ -185,18 +187,23 @@ namespace DodgeBLTZ
 
         /// <summary>
         /// Gets the game result from blockchain
+        /// TODO: Replace with actual blockchain polling for RNG Oracle result
         /// </summary>
         private IEnumerator GetGameResult()
         {
-            // In production, this would query the blockchain for the transaction result
-            // For now, we'll simulate the result
-
+            // TODO: In production, query WAX blockchain for RNG Oracle result
+            // Should poll /v1/chain/get_table_rows for pending games table
+            // Wait for Oracle to call back with random value
+            
+            Debug.Log("Waiting for RNG Oracle result...");
             yield return new WaitForSeconds(2f);
 
-            // Simulate 35% win chance
-            bool won = UnityEngine.Random.Range(0, 100) < 35;
-            int tokensWon = won ? 1 : 0;
-
+            // Temporary simulation - REMOVE for production
+            // Real implementation should get result from blockchain state
+            bool won = UnityEngine.Random.Range(0, 100) < GameConfig.WIN_CHANCE_PERCENT;
+            int tokensWon = won ? GameConfig.DBP_REWARD_AMOUNT : 0;
+            
+            Debug.Log($"Game result: {(won ? "WIN" : "LOSS")}, DBP earned: {tokensWon}");
             OnGameResult?.Invoke(won, tokensWon);
             
             SetGameState(GameState.Result);
@@ -249,18 +256,56 @@ namespace DodgeBLTZ
         {
             bool isLoggedIn = WalletConnection.Instance.IsLoggedIn();
             
-            if (playButton) playButton.interactable = isLoggedIn && !isProcessing;
-            if (loginButton) loginButton.gameObject.SetActive(!isLoggedIn);
+            if (playButton) 
+            {
+                playButton.interactable = isLoggedIn && !isProcessing;
+                // TODO: Apply UIColorPalette colors to button components in Unity Inspector
+            }
+            
+            if (loginButton) 
+            {
+                loginButton.gameObject.SetActive(!isLoggedIn);
+                // TODO: Apply UIColorPalette.ButtonPrimary color in Unity Inspector
+            }
             
             if (accountText)
             {
                 if (isLoggedIn)
                 {
-                    accountText.text = $"Account: {WalletConnection.Instance.GetAccount()}";
+                    accountText.text = $"👤 {WalletConnection.Instance.GetAccount()}";
+                    accountText.color = UIColorPalette.Connected;
                 }
                 else
                 {
-                    accountText.text = "Not logged in";
+                    accountText.text = "Connect WAX Wallet to play";
+                    accountText.color = UIColorPalette.TextSecondary;
+                }
+            }
+            
+            // Update game info display
+            if (gameInfoText)
+            {
+                gameInfoText.text = $"35% chance to win {GameConfig.DBP_REWARD_AMOUNT} DBP";
+                gameInfoText.color = UIColorPalette.TextSecondary;
+            }
+            
+            // Update status text
+            if (statusText)
+            {
+                if (isProcessing)
+                {
+                    statusText.text = "Processing...";
+                    statusText.color = UIColorPalette.Processing;
+                }
+                else if (isLoggedIn)
+                {
+                    statusText.text = "Ready to play!";
+                    statusText.color = UIColorPalette.Connected;
+                }
+                else
+                {
+                    statusText.text = "Wallet connection required";
+                    statusText.color = UIColorPalette.Disconnected;
                 }
             }
         }
@@ -272,10 +317,8 @@ namespace DodgeBLTZ
         {
             if (resultText)
             {
-                // TODO: Update messaging based on final brand approval (Issue #003)
-                // Current options: "You dodged successfully!" vs "BLTZ SUCCESSFUL!"
+                // Final branding: DODGE BLTZ BETA
                 resultText.text = won ? "BLTZ SUCCESSFUL!" : "BLTZ FAILED";
-                // Use centralized color palette for consistency (Issue #001)
                 resultText.color = won ? UIColorPalette.Success : UIColorPalette.Error;
             }
 
