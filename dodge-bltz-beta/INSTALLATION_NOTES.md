@@ -94,7 +94,8 @@ sudo apt update && sudo apt upgrade -y
 
 #### **2. Antelope CDT Installation (Latest v4.1.0)**
 ```bash
-# Install Antelope CDT v4.1.0 (latest as of July 2025)
+# Install Antelope CDT v4.1.0 (latest stable as of Sep 4, 2024)
+# Includes BLS host functions for Savanna consensus
 # Option 1: Build from source (recommended)
 git clone https://github.com/AntelopeIO/cdt
 cd cdt
@@ -106,6 +107,10 @@ cmake . && make install
 # Verify installation
 eosio-cpp --version
 # Should show Antelope CDT v4.1.0 or later
+
+# Research for newer versions:
+# Visit: https://github.com/AntelopeIO/cdt/releases
+# Visit: https://developers.wax.io/
 ```
 
 #### **3. EOSIO CLI Installation**
@@ -122,13 +127,18 @@ sudo apt install eosio.cdt
 ### **Recommended Setup Process**
 ```bash
 # On Linux system (Ubuntu 20.04+)
-# Install Antelope CDT v4.1.0
+# Install Antelope CDT v4.1.0 (latest stable as of Sep 4, 2024)
+# Includes BLS host functions for Savanna consensus
 git clone https://github.com/AntelopeIO/cdt
 cd cdt
 cmake . && make install
 
 # Verify installation
 eosio-cpp --version
+
+# Research for newer versions if needed:
+# Visit: https://github.com/AntelopeIO/cdt/releases
+# Visit: https://developers.wax.io/
 
 # Compile contracts
 cd dodge-bltz-beta/scripts
